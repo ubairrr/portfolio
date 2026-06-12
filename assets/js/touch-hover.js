@@ -23,11 +23,11 @@
      :hover state mirrored by .t-hover. */
   var SELECTORS = [
     '.rail-left a', '.rail-right a', '.rail-email a',
-    '.badge', '.hero h1 .line > span', '.cta',
+    '.badge', '.hero h1 .line', '.cta',
     '.sec-label', '.sec-title', '.about-name',
-    '.stack-cat', '.tile',
-    '.xp-entry', '.xp-company',
-    '.proj-row', '.proj-name',
+    '.stack-row', '.tile',
+    '.xp-entry',
+    '.proj-row',
     '.foot-cta h2', '.foot-email', '.wordmark', '.foot-bar a'
   ].join(',');
 

@@ -23,6 +23,7 @@
    * @param {boolean} opts.sequential     — reveal char-by-char           (default false)
    * @param {string}  opts.revealDir      — "start" | "end" | "center"   (default "start")
    * @param {string[]} opts.chars         — character pool                (default CHARS_ARR)
+   * @param {Element} opts.trigger        — element whose hover starts it (default el)
    */
   function applyScramble(el, opts) {
     const {
@@ -31,6 +32,7 @@
       sequential     = false,
       revealDir      = "start",
       chars          = CHARS_ARR,
+      trigger        = el,
     } = opts || {};
 
     // Collect direct text nodes that have visible content
@@ -136,8 +138,8 @@
       }, speed);
     }
 
-    el.addEventListener("mouseenter", start);
-    el.addEventListener("mouseleave", stop);
+    trigger.addEventListener("mouseenter", start);
+    trigger.addEventListener("mouseleave", stop);
   }
 
   /* ─────────────────────────────────────────────
@@ -155,9 +157,9 @@
       applyScramble(el, { speed: 30, maxIterations: 7 })
     );
 
-    // ── Hero headings (leaf spans inside .line) ───────────────────────
+    // ── Hero headings (leaf spans inside .line; whole line triggers) ──
     document.querySelectorAll(".hero h1 .line > span").forEach((el) =>
-      applyScramble(el, { speed: 25, maxIterations: 10, sequential: true, revealDir: "start" })
+      applyScramble(el, { speed: 25, maxIterations: 10, sequential: true, revealDir: "start", trigger: el.closest(".line") || el })
     );
 
     // ── CTA button ───────────────────────────────────────────────────
@@ -178,19 +180,19 @@
       applyScramble(el, { speed: 28, maxIterations: 12, sequential: true, revealDir: "center" })
     );
 
-    // ── Stack categories ──────────────────────────────────────────────
+    // ── Stack categories (whole row triggers) ─────────────────────────
     document.querySelectorAll(".stack-cat").forEach((el) =>
-      applyScramble(el, { speed: 28, maxIterations: 7 })
+      applyScramble(el, { speed: 28, maxIterations: 7, trigger: el.closest(".stack-row") || el })
     );
 
-    // ── Experience company names ──────────────────────────────────────
+    // ── Experience company names (whole entry triggers) ───────────────
     document.querySelectorAll(".xp-company").forEach((el) =>
-      applyScramble(el, { speed: 25, maxIterations: 9, sequential: true, revealDir: "start" })
+      applyScramble(el, { speed: 25, maxIterations: 9, sequential: true, revealDir: "start", trigger: el.closest(".xp-entry") || el })
     );
 
-    // ── Project names ─────────────────────────────────────────────────
+    // ── Project names (whole row triggers) ────────────────────────────
     document.querySelectorAll(".proj-name").forEach((el) =>
-      applyScramble(el, { speed: 25, maxIterations: 10, sequential: true, revealDir: "start" })
+      applyScramble(el, { speed: 25, maxIterations: 10, sequential: true, revealDir: "start", trigger: el.closest(".proj-row") || el })
     );
 
     // ── Footer ────────────────────────────────────────────────────────

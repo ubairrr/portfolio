@@ -77,9 +77,11 @@
     MAX_CURSOR_DISPLACEMENT: 100,
     LINE_COLOR: 'rgba(255, 255, 255, 0.32)',
     LINE_WIDTH: 0.8,
-    /* scroll-reactive force (touch only): page scroll velocity drags the
-       field vertically so flick-scrolling visibly bends the lines */
+    /* scroll-reactive force (touch only): page scroll velocity pushes the
+       field upward in a wavy pattern — vertical lift plus alternating
+       horizontal sway, both shaped by each point's noise phase */
     SCROLL_FORCE_FACTOR: 0.045,
+    SCROLL_SWAY_FACTOR: 0.6,
     MAX_SCROLL_VELOCITY: 90,
     SCROLL_SMOOTHING: 0.14
   };
@@ -89,11 +91,11 @@
      tracking of the finger. */
   const TOUCH_ONLY = window.matchMedia('(hover: none)').matches;
   if (TOUCH_ONLY) {
-    CFG.MOUSE_INFLUENCE_RADIUS = 260;
-    CFG.MOUSE_FORCE_FACTOR = 0.0013;
-    CFG.CURSOR_DISPLACEMENT_STRENGTH = 2.6;
-    CFG.MOUSE_SMOOTHING_FACTOR = 0.16;
-    CFG.MAX_MOUSE_VELOCITY = 140;
+    CFG.MOUSE_INFLUENCE_RADIUS = 220;
+    CFG.MOUSE_FORCE_FACTOR = 0.001;
+    CFG.CURSOR_DISPLACEMENT_STRENGTH = 2.3;
+    CFG.MOUSE_SMOOTHING_FACTOR = 0.13;
+    CFG.MAX_MOUSE_VELOCITY = 120;
   }
 
   const canvas = document.querySelector('canvas.waves-bg');
@@ -157,9 +159,11 @@
 
         if (withMouse) {
           if (scrollF) {
-            /* weight by the point's noise phase so the scroll push bends the
-               field organically instead of shifting the whole grid */
+            /* wavy scroll push: upward lift weighted by the point's noise
+               phase, plus a horizontal sway that alternates direction across
+               the field — the lines snake upward instead of translating */
             p.cursor.vy -= scrollF * (0.5 + 0.5 * Math.cos(move));
+            p.cursor.vx += scrollF * Math.sin(move) * CFG.SCROLL_SWAY_FACTOR;
           }
           const dx = p.x - mouse.sx;
           const dy = p.y - mouse.sy;

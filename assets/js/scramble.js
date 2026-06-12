@@ -48,7 +48,7 @@
     });
     if (!nodes.length) return;
 
-    let timer    = null;
+    let ticker   = null;  /* active frame driver, see startTicker() */
     let frame    = 0;
     let revealed = []; // one Set per text-node (sequential mode)
 
@@ -106,9 +106,39 @@
       return -1;
     }
 
+    /* Frame driver: gsap.ticker (rAF) when available, setInterval fallback.
+       iOS Safari suspends DOM timers during touch/momentum scrolling, which
+       silently froze the scroll-triggered scrambles on iPhone — the rAF
+       loop keeps stepping there, like every other GSAP animation. */
+    function stopTicker() {
+      if (!ticker) return;
+      if (ticker.fn) gsap.ticker.remove(ticker.fn);
+      else clearInterval(ticker.id);
+      ticker = null;
+    }
+
+    function startTicker(onFrame) {
+      stopTicker();
+      if (window.gsap) {
+        let lastT = performance.now();
+        const fn = () => {
+          const now = performance.now();
+          if (now - lastT < speed) return;
+          lastT = now;
+          if (onFrame() === false) stopTicker();
+        };
+        ticker = { fn };
+        gsap.ticker.add(fn);
+      } else {
+        const id = setInterval(() => {
+          if (onFrame() === false) stopTicker();
+        }, speed);
+        ticker = { id };
+      }
+    }
+
     function stop() {
-      clearInterval(timer);
-      timer = null;
+      stopTicker();
       nodes.forEach(({ node, original }) => { node.textContent = original; });
       unlockWidth();
     }
@@ -119,7 +149,7 @@
       frame    = 0;
       revealed = nodes.map(() => new Set());
 
-      timer = setInterval(() => {
+      startTicker(() => {
         if (sequential) {
           let allDone = true;
           nodes.forEach(({ node, original }, i) => {
@@ -129,19 +159,19 @@
             node.textContent = scrambleSeq(original, rev);
           });
           if (allDone) {
-            clearInterval(timer);
             nodes.forEach(({ node, original }) => { node.textContent = original; });
             unlockWidth();
+            return false;
           }
         } else {
           nodes.forEach(({ node, original }) => { node.textContent = scramble(original); });
           if (++frame >= maxIterations) {
-            clearInterval(timer);
             nodes.forEach(({ node, original }) => { node.textContent = original; });
             unlockWidth();
+            return false;
           }
         }
-      }, speed);
+      });
     }
 
     trigger.addEventListener("mouseenter", start);
@@ -235,7 +265,9 @@
         trigger: reveal,
         start: "top 90%",
         once: true,
-        onEnter: play
+        /* at onEnter the reveal fade has only just started (~0 opacity);
+           wait a beat so the scramble plays on visible text */
+        onEnter: () => gsap.delayedCall(0.35, play)
       });
     });
   }

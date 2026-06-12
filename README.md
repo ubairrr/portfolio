@@ -1,36 +1,35 @@
 # Ubair Mustafa — Portfolio
 
-A single-page portfolio site for Ubair Mustafa, software engineer. Built as a
-**zero-build, fully self-contained static site** — no framework, no bundler, no
-third-party runtime requests (with one optional exception, see below).
+Personal portfolio site. Zero build step, zero dependencies, zero third-party runtime requests.
 
-The visual centrepiece is a GSAP-driven scroll experience: a zoom-parallax
-intro, smoothed inertial scrolling, scroll-triggered reveals, an interactive
-Perlin-noise line-field backdrop, and a cursor-following project preview.
+**[ubairrr.github.io](https://ubairrr.github.io)**
 
 ---
 
-## Quick start
+## Stack
 
-It's plain static files — no build step. Serve the project root with any static
-server:
+Vanilla HTML, CSS, and JavaScript. GSAP for animations (self-hosted).
+
+**Highlights:**
+- Zoom-parallax intro sequence
+- Inertial scroll smoothing with scroll-triggered reveals
+- Interactive Perlin-noise canvas backdrop
+- Cursor-following project preview
+- Text scramble hover effect
+
+---
+
+## Run locally
 
 ```bash
-# Python
 python3 -m http.server 8000
-
-# Node
+# or
 npx serve .
-
-# then open http://localhost:8000
 ```
-
-Opening `index.html` directly via `file://` mostly works, but a local server is
-recommended so fonts and the module-free scripts load with correct MIME types.
 
 ---
 
-## Project structure
+## Structure
 
 ```
 .
@@ -52,101 +51,29 @@ recommended so fonts and the module-free scripts load with correct MIME types.
 │       ├── profile.webp        # Portrait
 │       ├── og-image.png        # 1200×630 social share card
 │       ├── favicon.svg, *.png  # Favicons + app icons
-│       ├── icons/              # Tech-stack SVG icons (Simple Icons, white)
+│       ├── icons/              # Tech-stack SVG icons
 │       └── projects/           # Project preview images
-├── site.webmanifest            # PWA manifest
-├── robots.txt, sitemap.xml     # SEO
+├── site.webmanifest
+├── robots.txt, sitemap.xml
 ├── _headers                    # Netlify / generic security + cache headers
-├── vercel.json                 # Vercel headers config
-├── netlify.toml                # Netlify config
-├── .github/workflows/deploy.yml# GitHub Pages CI
-└── .nojekyll                   # Stops GitHub Pages from stripping assets/
+├── vercel.json
+└── netlify.toml
 ```
-
-### Load order (in `index.html`)
-
-1. Inline `ResizeObserver` shim (silences a benign console warning) — must be first.
-2. `assets/css/fonts.css`, `assets/css/portfolio.css`
-3. GSAP core → ScrollTrigger → ScrollSmoother (order matters)
-4. `waves.js` → `smoother.js` → `intro.js` → `interactions.js` → `scramble.js`
-
-`smoother.js` registers the GSAP plugins and creates the single `ScrollSmoother`
-instance, exposed as `window.__smoother` so `intro.js` can pause/resume it.
-
----
-
-## Editing content
-
-All copy, projects, stack items, and experience entries live directly in
-`index.html` as semantic HTML — edit there. Key hooks:
-
-| You want to change…        | Where |
-|----------------------------|-------|
-| Any text / project / role  | `index.html` |
-| Colours, type, spacing     | `:root` design tokens at the top of `assets/css/portfolio.css` |
-| A stat counter target      | `data-count="N"` on `.num` in the hero |
-| A project hover preview     | `data-img="…"` on the `.proj-row`, image in `assets/img/projects/` |
-| Intro on/off, motion, etc. | `data-*` attributes on the `<html>` element (see below) |
-
-### `<html>` data attributes (visual modes)
-
-| Attribute        | Values                              | Effect |
-|------------------|-------------------------------------|--------|
-| `data-direction` | `impact` · `mono`                   | Display typeface system |
-| `data-grain`     | `on` · `off`                        | Film-grain texture overlay |
-| `data-motion`    | `showy` · `calm`                    | `calm` disables smoothing + decorative animation |
-| `data-backdrop`  | `waves` · `blob` · `plain`          | Background treatment |
-| `data-intro`     | `on` · `off`                        | Zoom intro on first load |
-
----
-
-## Third-party requests
-
-The site is designed to make **zero** third-party requests. Fonts and GSAP are
-self-hosted; stack icons and project previews are vendored into `assets/img/`.
-
-The **one** optional exception is a live GitHub star count in the footer, which
-calls `api.github.com`. To disable it for a fully self-contained site, set
-`ENABLE_GITHUB_STARS = false` near the top of `assets/js/interactions.js` — the
-footer then shows a static GitHub link instead.
 
 ---
 
 ## Deployment
 
-The site deploys as-is to any static host. Before going live, do a
-find-and-replace of the placeholder canonical domain
-`https://ubairrr.github.io/` (in `index.html`, `sitemap.xml`, `robots.txt`)
-with your real domain.
+Drop the folder onto any static host — no build command needed.
 
-| Host            | What to do |
-|-----------------|-----------|
-| **GitHub Pages**| Push to `main`; the included Actions workflow deploys automatically. Enable Pages → "GitHub Actions" in repo settings. |
-| **Vercel**      | Import the repo. No build command; output dir = root. `vercel.json` sets headers. |
-| **Netlify**     | Import the repo. No build command; publish dir = `.`. `netlify.toml` + `_headers` handle config. |
-| **Any CDN/nginx**| Upload the whole folder. Serve `index.html` at `/`. |
-
-### Analytics
-
-No analytics ship by default. To add a privacy-friendly tracker, paste the
-snippet into the clearly-marked `ANALYTICS` comment block in `<head>` of
-`index.html` (a Plausible example is shown there).
-
----
-
-## Accessibility & performance
-
-- Respects `prefers-reduced-motion` everywhere (smoothing, reveals, intro,
-  waves, and a global animation kill-switch all honour it).
-- Keyboard skip-link, visible `:focus-visible` rings, ARIA labels on icon links.
-- Fonts preloaded + `font-display: swap`; images `loading="lazy"` +
-  `decoding="async"`; scripts at end of body.
-- Graceful degradation: if GSAP fails to load, the page scrolls natively and all
-  content stays visible.
+| Host | Setup |
+|------|-------|
+| **GitHub Pages** | Push to `main`; Actions workflow deploys automatically. |
+| **Vercel** | Import repo. No build command; output dir = root. |
+| **Netlify** | Import repo. No build command; publish dir = `.` |
 
 ---
 
 ## License
 
-© Ubair Mustafa. All rights reserved. The portrait, project content, and
-personal branding are not licensed for reuse.
+© Ubair Mustafa. All rights reserved.

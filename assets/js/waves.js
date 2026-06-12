@@ -80,7 +80,7 @@
     /* scroll-reactive force (touch only): page scroll velocity pushes the
        field upward in a wavy pattern — vertical lift plus alternating
        horizontal sway, both shaped by each point's noise phase */
-    SCROLL_FORCE_FACTOR: 0.045,
+    SCROLL_FORCE_FACTOR: 0.0225,
     SCROLL_SWAY_FACTOR: 0.6,
     MAX_SCROLL_VELOCITY: 90,
     SCROLL_SMOOTHING: 0.14

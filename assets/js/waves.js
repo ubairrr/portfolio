@@ -90,12 +90,22 @@
      field reacts harder there: wider influence, stronger force, snappier
      tracking of the finger. */
   const TOUCH_ONLY = window.matchMedia('(hover: none)').matches;
+
+  /* Mobile renders the field zoomed out to 50%: the grid is laid out in a
+     2× coordinate space and drawn at half scale, so the pattern is twice as
+     dense on screen. The interaction values below are expressed in that
+     field space (÷ZOOM for sizes/velocities, ×ZOOM for force) so the visual
+     feel of the touch and scroll reactions is unchanged by the zoom. */
+  const ZOOM = TOUCH_ONLY ? 0.5 : 1;
+
   if (TOUCH_ONLY) {
-    CFG.MOUSE_INFLUENCE_RADIUS = 220;
-    CFG.MOUSE_FORCE_FACTOR = 0.001;
+    CFG.MOUSE_INFLUENCE_RADIUS = 220 / ZOOM;
+    CFG.MOUSE_FORCE_FACTOR = 0.001 * ZOOM;
     CFG.CURSOR_DISPLACEMENT_STRENGTH = 2.3;
     CFG.MOUSE_SMOOTHING_FACTOR = 0.13;
-    CFG.MAX_MOUSE_VELOCITY = 120;
+    CFG.MAX_MOUSE_VELOCITY = 120 / ZOOM;
+    CFG.MAX_CURSOR_DISPLACEMENT = 100 / ZOOM;
+    CFG.SCROLL_FORCE_FACTOR = 0.0225 / ZOOM;
   }
 
   const canvas = document.querySelector('canvas.waves-bg');
@@ -105,7 +115,8 @@
   const reducedMQ = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   let lines = [];
-  let W = 0, H = 0;
+  let W = 0, H = 0;     /* canvas pixels */
+  let FW = 0, FH = 0;   /* field coordinate space (canvas ÷ ZOOM) */
   let visible = true;
   let staticDrawn = false;
   const mouse = { x: -10, y: 0, lx: 0, ly: 0, sx: 0, sy: 0, v: 0, vs: 0, a: 0, set: false };
@@ -124,16 +135,18 @@
     const r = canvas.getBoundingClientRect();
     W = canvas.width = Math.max(1, Math.round(r.width));
     H = canvas.height = Math.max(1, Math.round(r.height));
+    FW = W / ZOOM;
+    FH = H / ZOOM;
   }
 
   function setLines() {
     lines = [];
-    const oWidth = W + CFG.GRID_WIDTH_OFFSET;
-    const oHeight = H + CFG.GRID_HEIGHT_OFFSET;
+    const oWidth = FW + CFG.GRID_WIDTH_OFFSET;
+    const oHeight = FH + CFG.GRID_HEIGHT_OFFSET;
     const totalLines = Math.ceil(oWidth / CFG.GRID_X_GAP);
     const totalPoints = Math.ceil(oHeight / CFG.GRID_Y_GAP);
-    const xStart = (W - CFG.GRID_X_GAP * totalLines) / 2;
-    const yStart = (H - CFG.GRID_Y_GAP * totalPoints) / 2;
+    const xStart = (FW - CFG.GRID_X_GAP * totalLines) / 2;
+    const yStart = (FH - CFG.GRID_Y_GAP * totalPoints) / 2;
     for (let i = 0; i <= totalLines; i++) {
       const points = [];
       for (let j = 0; j <= totalPoints; j++) {
@@ -190,10 +203,12 @@
   }
 
   function drawLines() {
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, W, H);
+    ctx.setTransform(ZOOM, 0, 0, ZOOM, 0, 0);   /* draw field at 50% on mobile */
     ctx.beginPath();
     ctx.strokeStyle = CFG.LINE_COLOR;
-    ctx.lineWidth = CFG.LINE_WIDTH;
+    ctx.lineWidth = CFG.LINE_WIDTH / ZOOM;      /* constant on-screen thickness */
     for (const points of lines) {
       const p0 = points[0];
       ctx.moveTo(p0.x + p0.wave.x, p0.y + p0.wave.y);
@@ -247,8 +262,8 @@
 
   function updateMousePosition(cx, cy) {
     const r = canvas.getBoundingClientRect();
-    mouse.x = cx - r.left;
-    mouse.y = cy - r.top;
+    mouse.x = (cx - r.left) / ZOOM;   /* map pointer into field space */
+    mouse.y = (cy - r.top) / ZOOM;
     if (!mouse.set) {
       mouse.sx = mouse.x; mouse.sy = mouse.y;
       mouse.lx = mouse.x; mouse.ly = mouse.y;

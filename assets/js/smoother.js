@@ -37,13 +37,19 @@
   };
   var SMOOTH = 2.1;
 
+  /* data-lag effects need a continuously-ticking smoother to resolve; on
+     touch-only devices the short smoothTouch window leaves them frozen
+     mid-offset (sections end up overlapping), so only the deterministic
+     data-speed parallax runs there. */
+  var touchOnly = window.matchMedia('(hover: none)').matches;
+
   /* -- 1 · ScrollSmoother ---------------------------------------------------- */
   var smoother = ScrollSmoother.create({
     wrapper: '#smooth-wrapper',
     content: '#smooth-content',
     smooth: isCalm() ? 0 : SMOOTH,
     smoothTouch: 0.2,
-    effects: true,             /* enables data-speed / data-lag parallax */
+    effects: touchOnly ? '[data-speed]' : true,
     ignoreMobileResize: true
   });
   window.__smoother = smoother;

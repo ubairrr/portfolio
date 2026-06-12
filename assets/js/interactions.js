@@ -53,13 +53,28 @@
   ];
 
   var mouseX = 0, mouseY = 0, curX = 0, curY = 0, rafId = null, hovering = false;
+  var touchMode = false, lastTouchTs = 0;
 
   function loop() {
     var k = 0.16;
     curX += (mouseX - curX) * k;
     curY += (mouseY - curY) * k;
-    prev.style.left = curX + 24 + 'px';
-    prev.style.top = curY - 115 + 'px';
+    var w = prev.offsetWidth || 340;
+    var h = prev.offsetHeight || 230;
+    var x, y;
+    if (touchMode) {
+      /* above the finger, centred, so the hand doesn't cover the card */
+      x = curX - w / 2;
+      y = curY - h - 28;
+    } else {
+      x = curX + 24;
+      y = curY - h / 2;
+    }
+    /* keep the card fully on-screen */
+    x = Math.max(8, Math.min(x, window.innerWidth - w - 8));
+    y = Math.max(8, Math.min(y, window.innerHeight - h - 8));
+    prev.style.left = x + 'px';
+    prev.style.top = y + 'px';
     if (hovering || Math.abs(mouseX - curX) > 0.5) {
       rafId = requestAnimationFrame(loop);
     } else {
@@ -71,6 +86,14 @@
     document.addEventListener('mousemove', function (e) {
       mouseX = e.clientX;
       mouseY = e.clientY;
+      /* touch-hover.js tags its synthetic events; ignore the compatibility
+         mousemove some browsers fire right after a tap */
+      if (e.__fromTouch) {
+        touchMode = true;
+        lastTouchTs = Date.now();
+      } else if (Date.now() - lastTouchTs > 800) {
+        touchMode = false;
+      }
     }, { passive: true });
 
     document.querySelectorAll('.proj-row').forEach(function (row, i) {

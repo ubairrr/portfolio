@@ -68,7 +68,6 @@ Drop the folder onto any static host — no build command needed.
 
 | Host | Setup |
 |------|-------|
-| **GitHub Pages** | Push to `main`; Actions workflow deploys automatically. |
 | **Vercel** | Import repo. No build command; output dir = root. |
 | **Netlify** | Import repo. No build command; publish dir = `.` |
 

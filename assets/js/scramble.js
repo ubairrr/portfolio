@@ -12,6 +12,10 @@
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
+  /* Every scramble-bound element, so the mobile auto-play below can replay
+     the effect when the element's ScrollTrigger reveal fires. */
+  const REGISTERED = [];
+
   /**
    * Apply scramble-hover to a single element.
    * Only direct text nodes are scrambled — child elements are left intact.
@@ -127,12 +131,14 @@
           if (allDone) {
             clearInterval(timer);
             nodes.forEach(({ node, original }) => { node.textContent = original; });
+            unlockWidth();
           }
         } else {
           nodes.forEach(({ node, original }) => { node.textContent = scramble(original); });
           if (++frame >= maxIterations) {
             clearInterval(timer);
             nodes.forEach(({ node, original }) => { node.textContent = original; });
+            unlockWidth();
           }
         }
       }, speed);
@@ -140,6 +146,8 @@
 
     trigger.addEventListener("mouseenter", start);
     trigger.addEventListener("mouseleave", stop);
+
+    REGISTERED.push({ el, play: start });
   }
 
   /* ─────────────────────────────────────────────
@@ -205,6 +213,31 @@
     document.querySelectorAll(".wordmark").forEach((el) =>
       applyScramble(el, { speed: 28, maxIterations: 12, sequential: true, revealDir: "center" })
     );
+
+    bindAutoScramble();
+  }
+
+  /* ─────────────────────────────────────────────
+     Mobile auto-play: on touch-only devices each scrambled text replays
+     once when its ScrollTrigger reveal fires, using the same start point
+     as the .reveal batch in smoother.js — so the scramble rides in with
+     the entrance animation instead of waiting for a (mouse) hover.
+  ───────────────────────────────────────────── */
+  function bindAutoScramble() {
+    if (!window.ScrollTrigger || !window.gsap) return;
+    if (!window.matchMedia("(hover: none)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    REGISTERED.forEach(({ el, play }) => {
+      const reveal = el.closest(".reveal");
+      if (!reveal) return;               /* only ScrollTrigger-revealed texts */
+      ScrollTrigger.create({
+        trigger: reveal,
+        start: "top 90%",
+        once: true,
+        onEnter: play
+      });
+    });
   }
 
   if (document.readyState === "loading") {

@@ -2,7 +2,6 @@
 
 Personal portfolio site. Zero build step, zero dependencies, zero third-party runtime requests.
 
-**[ubairrr.github.io](https://ubairrr.github.io)**
 
 ---
 

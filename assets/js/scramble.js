@@ -1,0 +1,213 @@
+/* scramble.js
+   Vanilla JS port of ScrambleHover by fancycomponents.dev
+   Applies text scramble-on-hover to all text elements in the portfolio. */
+
+(function () {
+  "use strict";
+
+  const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*_-+=<>/\\|";
+  const CHARS_ARR = CHARS.split("");
+
+  function rand(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  /**
+   * Apply scramble-hover to a single element.
+   * Only direct text nodes are scrambled — child elements are left intact.
+   *
+   * @param {Element} el
+   * @param {Object}  opts
+   * @param {number}  opts.speed          — interval ms between frames   (default 40)
+   * @param {number}  opts.maxIterations  — frames before settling        (default 8)
+   * @param {boolean} opts.sequential     — reveal char-by-char           (default false)
+   * @param {string}  opts.revealDir      — "start" | "end" | "center"   (default "start")
+   * @param {string[]} opts.chars         — character pool                (default CHARS_ARR)
+   */
+  function applyScramble(el, opts) {
+    const {
+      speed          = 40,
+      maxIterations  = 8,
+      sequential     = false,
+      revealDir      = "start",
+      chars          = CHARS_ARR,
+    } = opts || {};
+
+    // Collect direct text nodes that have visible content
+    const nodes = [];
+    el.childNodes.forEach((n) => {
+      if (n.nodeType === Node.TEXT_NODE && n.textContent.trim().length) {
+        nodes.push({ node: n, original: n.textContent });
+      }
+    });
+    if (!nodes.length) return;
+
+    let timer    = null;
+    let frame    = 0;
+    let revealed = []; // one Set per text-node (sequential mode)
+
+    // Width-lock helpers — prevent layout shift while chars swap
+    function lockWidth() {
+      if (el._scr_locked) return;
+      const w = el.getBoundingClientRect().width;
+      if (!w) return;
+      el._scr_savedDisplay   = el.style.display;
+      el._scr_savedMinWidth  = el.style.minWidth;
+      // inline elements can't take width — promote to inline-block
+      const computed = getComputedStyle(el).display;
+      if (computed === "inline") el.style.display = "inline-block";
+      el.style.minWidth = w + "px";
+      el._scr_locked = true;
+    }
+    function unlockWidth() {
+      if (!el._scr_locked) return;
+      el.style.display  = el._scr_savedDisplay;
+      el.style.minWidth = el._scr_savedMinWidth;
+      el._scr_locked = false;
+    }
+
+    function scramble(text) {
+      return text.split("").map((c) =>
+        (c === " " || c === "\n" || c === "\t") ? c : rand(chars)
+      ).join("");
+    }
+
+    function scrambleSeq(text, rev) {
+      return text.split("").map((c, i) => {
+        if (c === " " || c === "\n" || c === "\t") return c;
+        return rev.has(i) ? c : rand(chars);
+      }).join("");
+    }
+
+    function nextRevealIdx(text, rev) {
+      const len = text.length;
+      const nonSpace = (i) => text[i] !== " " && text[i] !== "\n" && text[i] !== "\t";
+      switch (revealDir) {
+        case "end":
+          for (let i = len - 1; i >= 0; i--) if (!rev.has(i) && nonSpace(i)) return i;
+          break;
+        case "center": {
+          const mid    = Math.floor(len / 2);
+          const offset = Math.floor(rev.size / 2);
+          const idx    = rev.size % 2 === 0 ? mid + offset : mid - offset - 1;
+          if (idx >= 0 && idx < len && !rev.has(idx) && nonSpace(idx)) return idx;
+          for (let i = 0; i < len; i++) if (!rev.has(i) && nonSpace(i)) return i;
+          break;
+        }
+        default: // "start"
+          for (let i = 0; i < len; i++) if (!rev.has(i) && nonSpace(i)) return i;
+      }
+      return -1;
+    }
+
+    function stop() {
+      clearInterval(timer);
+      timer = null;
+      nodes.forEach(({ node, original }) => { node.textContent = original; });
+      unlockWidth();
+    }
+
+    function start() {
+      stop();
+      lockWidth();
+      frame    = 0;
+      revealed = nodes.map(() => new Set());
+
+      timer = setInterval(() => {
+        if (sequential) {
+          let allDone = true;
+          nodes.forEach(({ node, original }, i) => {
+            const rev = revealed[i];
+            const idx = nextRevealIdx(original, rev);
+            if (idx !== -1) { rev.add(idx); allDone = false; }
+            node.textContent = scrambleSeq(original, rev);
+          });
+          if (allDone) {
+            clearInterval(timer);
+            nodes.forEach(({ node, original }) => { node.textContent = original; });
+          }
+        } else {
+          nodes.forEach(({ node, original }) => { node.textContent = scramble(original); });
+          if (++frame >= maxIterations) {
+            clearInterval(timer);
+            nodes.forEach(({ node, original }) => { node.textContent = original; });
+          }
+        }
+      }, speed);
+    }
+
+    el.addEventListener("mouseenter", start);
+    el.addEventListener("mouseleave", stop);
+  }
+
+  /* ─────────────────────────────────────────────
+     Apply to every text surface in the portfolio
+  ───────────────────────────────────────────── */
+  function init() {
+
+    // ── Navigation rail ──────────────────────────────────────────────
+    document.querySelectorAll(".rail-right a").forEach((el) =>
+      applyScramble(el, { speed: 28, maxIterations: 7 })
+    );
+
+    // ── Badge ("Open to opportunities") ──────────────────────────────
+    document.querySelectorAll(".badge").forEach((el) =>
+      applyScramble(el, { speed: 30, maxIterations: 7 })
+    );
+
+    // ── Hero headings (leaf spans inside .line) ───────────────────────
+    document.querySelectorAll(".hero h1 .line > span").forEach((el) =>
+      applyScramble(el, { speed: 25, maxIterations: 10, sequential: true, revealDir: "start" })
+    );
+
+    // ── CTA button ───────────────────────────────────────────────────
+    document.querySelectorAll(".cta").forEach((el) =>
+      applyScramble(el, { speed: 28, maxIterations: 7 })
+    );
+
+    // ── Section labels & titles ───────────────────────────────────────
+    document.querySelectorAll(".sec-label").forEach((el) =>
+      applyScramble(el, { speed: 25, maxIterations: 8, sequential: true, revealDir: "start" })
+    );
+    document.querySelectorAll(".sec-title").forEach((el) =>
+      applyScramble(el, { speed: 22, maxIterations: 10, sequential: true, revealDir: "start" })
+    );
+
+    // ── About ─────────────────────────────────────────────────────────
+    document.querySelectorAll(".about-name").forEach((el) =>
+      applyScramble(el, { speed: 28, maxIterations: 12, sequential: true, revealDir: "center" })
+    );
+
+    // ── Stack categories ──────────────────────────────────────────────
+    document.querySelectorAll(".stack-cat").forEach((el) =>
+      applyScramble(el, { speed: 28, maxIterations: 7 })
+    );
+
+    // ── Experience company names ──────────────────────────────────────
+    document.querySelectorAll(".xp-company").forEach((el) =>
+      applyScramble(el, { speed: 25, maxIterations: 9, sequential: true, revealDir: "start" })
+    );
+
+    // ── Project names ─────────────────────────────────────────────────
+    document.querySelectorAll(".proj-name").forEach((el) =>
+      applyScramble(el, { speed: 25, maxIterations: 10, sequential: true, revealDir: "start" })
+    );
+
+    // ── Footer ────────────────────────────────────────────────────────
+    document.querySelectorAll(".foot-cta h2").forEach((el) =>
+      applyScramble(el, { speed: 22, maxIterations: 10, sequential: true, revealDir: "start" })
+    );
+    document.querySelectorAll(".foot-email").forEach((el) =>
+      applyScramble(el, { speed: 20, maxIterations: 8 })
+    );
+    document.querySelectorAll(".wordmark").forEach((el) =>
+      applyScramble(el, { speed: 28, maxIterations: 12, sequential: true, revealDir: "center" })
+    );
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();

@@ -1,0 +1,20 @@
+# ─────────────────────────────────────────────────────────────
+# Build artifacts & dependencies (none — this is a no-build static site)
+node_modules/
+dist/
+.cache/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local

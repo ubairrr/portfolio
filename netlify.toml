@@ -1,0 +1,5 @@
+[build]
+  publish = "."
+
+# No build step — this is a hand-authored static site.
+# Headers are defined in the _headers file at the project root.

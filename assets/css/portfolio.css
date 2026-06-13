@@ -955,20 +955,20 @@ html[data-direction="editorial"] .wordmark.t-hover { color: var(--ink); }
 
   .sec-label { font-size: 12px; letter-spacing: 0.24em; gap: 11px; margin-bottom: 34px; }
   .sec-label::before { width: 32px; }
-  .sec-title { font-size: calc(clamp(36px, 10.5vw, 92px) * var(--display-scale)); margin-bottom: 44px; }
+  .sec-title { font-size: calc(clamp(28px, 8.4vw, 72px) * var(--display-scale)); margin-bottom: 36px; }
 
-  .hero { padding: 90px 0 0; }
-  .hero h1 { font-size: calc(clamp(44px, 14vw, 168px) * var(--display-scale)); }
+  .hero { padding: 84px 0 0; }
+  .hero h1 { font-size: calc(clamp(34px, 11vw, 110px) * var(--display-scale)); }
   .badge { padding: 7px 14px; font-size: 11.5px; margin-bottom: 30px; }
   .hero-sub { margin-top: 32px; gap: 26px; }
   .tagline { font-size: 15px; }
   .cta { padding: 15px 28px; font-size: 13px; }
   .stats { margin-top: 48px; }
-  .stat .num { font-size: calc(clamp(34px, 9vw, 64px) * var(--display-scale)); }
+  .stat .num { font-size: calc(clamp(28px, 7.4vw, 56px) * var(--display-scale)); }
   .stat .lbl { margin-top: 7px; font-size: 12px; }
 
   .about-grid { gap: 44px; }
-  .about-quote blockquote { font-size: calc(clamp(27px, 7.4vw, 58px) * var(--display-scale)); }
+  .about-quote blockquote { font-size: calc(clamp(23px, 6.2vw, 50px) * var(--display-scale)); }
   .about-bio .profile-photo { height: 340px; }
   .about-name { margin: 26px 0 6px; }
   .about-role { margin-bottom: 20px; }
@@ -980,19 +980,19 @@ html[data-direction="editorial"] .wordmark.t-hover { color: var(--ink); }
   .tile .t-name { font-size: 13px; }
 
   .xp-entry { grid-template-columns: 1fr; gap: 6px; padding: 30px 0; }
-  .xp-company { font-size: calc(clamp(26px, 7vw, 48px) * var(--display-scale)); }
+  .xp-company { font-size: calc(clamp(22px, 6vw, 44px) * var(--display-scale)); }
   .xp-dates { font-size: 12px; }
   .xp-role { font-size: 14px; }
 
   .proj-row { gap: 10px 14px; padding: 26px 4px; }
-  .proj-name { font-size: calc(clamp(23px, 6.4vw, 46px) * var(--display-scale)); }
+  .proj-name { font-size: calc(clamp(20px, 5.4vw, 40px) * var(--display-scale)); }
   .proj-tags { gap: 6px; }
   .proj-tags span { font-size: 10.5px; padding: 4px 10px; }
 
   footer { padding: 90px 0 0; }
-  .foot-cta h2 { font-size: calc(clamp(30px, 8.6vw, 72px) * var(--display-scale)); margin-bottom: 20px; }
+  .foot-cta h2 { font-size: calc(clamp(25px, 7vw, 60px) * var(--display-scale)); margin-bottom: 18px; }
   .foot-divider { margin: 56px 0 0; }
-  .wordmark { padding: 44px 0 0; }
+  .wordmark { font-size: calc(11vw * var(--display-scale)); padding: 40px 0 0; }
   .foot-bar { flex-wrap: wrap; gap: 10px 24px; padding: 26px 0 24px; margin-top: 36px; font-size: 12px; }
 }
 

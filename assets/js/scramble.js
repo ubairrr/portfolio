@@ -256,7 +256,7 @@
      Everything else with a scramble (nav, badge, stack rows, project rows,
      company names, footer, …) is left to touch-hover only on mobile.
   ───────────────────────────────────────────── */
-  const HEADING_SEL = ".sec-label, .sec-title";
+  const HEADING_SEL = ".sec-label, .sec-title, .wordmark";
 
   function bindAutoScramble() {
     if (!window.ScrollTrigger || !window.gsap) return;

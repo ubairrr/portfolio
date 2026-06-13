@@ -631,10 +631,13 @@ html[data-direction="editorial"] .about-quote .q-accent { font-style: italic; }
 .tile img { width: 22px; height: 22px; display: block; }
 .tile .fallback {
   display: none;
-  width: 22px; height: 22px;
+  min-width: 22px; height: 22px;
+  padding: 0 4px;
+  box-sizing: border-box;
   place-items: center;
   font-size: 10px; font-weight: 700;
   letter-spacing: 0.04em;
+  white-space: nowrap;
   color: var(--accent);
   border: 1px solid var(--accent);
   border-radius: 4px;
@@ -979,7 +982,8 @@ html[data-direction="editorial"] .wordmark.t-hover { color: var(--ink); }
   .stack-cat { font-size: 12px; }
   .stack-tiles { gap: 8px; }
   .tile { gap: 7px; padding: 8px 12px 8px 9px; }
-  .tile img, .tile .fallback { width: 16px; height: 16px; }
+  .tile img { width: 16px; height: 16px; }
+  .tile .fallback { min-width: 16px; height: 16px; padding: 0 3px; font-size: 8.5px; }
   .tile .t-name { font-size: 12px; }
 
   .xp-entry { grid-template-columns: 1fr; gap: 5px; padding: 20px 0; }
@@ -997,7 +1001,7 @@ html[data-direction="editorial"] .wordmark.t-hover { color: var(--ink); }
   .foot-cta h2 { font-size: calc(clamp(21px, 5.8vw, 50px) * var(--display-scale)); margin-bottom: 14px; }
   .foot-email { font-size: clamp(16px, 4.2vw, 22px); }
   .foot-divider { margin: 40px 0 0; }
-  .wordmark { font-size: calc(9vw * var(--display-scale)); padding: 28px 0 0; }
+  .wordmark { font-size: calc(7.5vw * var(--display-scale)); padding: 28px 0 0; }
   .foot-bar { flex-wrap: wrap; gap: 8px 20px; padding: 18px 0 16px; margin-top: 26px; font-size: 11px; }
 }
 

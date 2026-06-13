@@ -127,7 +127,11 @@
   function fitWordmark() {
     if (!wm) return;
     wm.style.fontSize = '';
-    var avail = document.documentElement.clientWidth * 0.96;
+    var vw = document.documentElement.clientWidth;
+    /* On mobile bound to the content column (viewport minus side gutters) so
+       the wordmark can't spill past the margins or be clipped by the footer's
+       overflow:hidden. On desktop keep the near-full-bleed look. */
+    var avail = vw <= 760 ? vw - 36 : vw * 0.96;
     var w = wm.scrollWidth;
     if (w > avail) {
       var cur = parseFloat(getComputedStyle(wm).fontSize);

@@ -1,5 +1,7 @@
 # Ubair Mustafa — Portfolio
 
+**Live:** [ubair.qzz.io](https://ubair.qzz.io)
+
 Personal portfolio site. Zero build step, zero dependencies, zero third-party runtime requests.
 
 

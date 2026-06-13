@@ -230,8 +230,13 @@
     mouse.x = (cx - r.left) / ZOOM;   /* map pointer into field space */
     mouse.y = (cy - r.top) / ZOOM;
     if (!mouse.set) {
+      /* Fresh (re)initialisation: park the smoothed pointer exactly on the new
+         position with zero velocity, so re-engaging after a lift can't replay
+         the previous swipe's leftover velocity as a phantom burst, nor glide a
+         fast swipe across the field from the old position. */
       mouse.sx = mouse.x; mouse.sy = mouse.y;
       mouse.lx = mouse.x; mouse.ly = mouse.y;
+      mouse.v = 0; mouse.vs = 0;
       mouse.set = true;
     }
   }
@@ -239,16 +244,19 @@
   window.addEventListener('resize', () => { setSize(); setLines(); staticDrawn = false; }, { passive: true });
   window.addEventListener('mousemove', (e) => updateMousePosition(e.clientX, e.clientY), { passive: true });
 
+  /* On touch, a finger lift leaves the virtual pointer parked where it was —
+     the field settles in place instead of snapping. The next touch/scroll
+     re-initialises the pointer at its own position (mouse.set = false forces
+     the zero-velocity snap in updateMousePosition), so re-engaging never
+     emulates a fast swipe from the old spot to the new one. */
   window.addEventListener('touchstart', (e) => {
     if (!e.touches.length) return;
+    mouse.set = false;
     updateMousePosition(e.touches[0].clientX, e.touches[0].clientY);
   }, { passive: true });
   window.addEventListener('touchmove', (e) => {
     if (!e.touches.length) return;
     updateMousePosition(e.touches[0].clientX, e.touches[0].clientY);
-  }, { passive: true });
-  window.addEventListener('touchend', () => {
-    mouse.set = false;
   }, { passive: true });
 
   /* Redraw the static frame if the OS reduced-motion preference flips. */

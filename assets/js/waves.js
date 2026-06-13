@@ -76,14 +76,7 @@
     CURSOR_DISPLACEMENT_STRENGTH: 2,
     MAX_CURSOR_DISPLACEMENT: 100,
     LINE_COLOR: 'rgba(255, 255, 255, 0.32)',
-    LINE_WIDTH: 0.8,
-    /* scroll-reactive force (touch only): page scroll velocity pushes the
-       field upward in a wavy pattern — vertical lift plus alternating
-       horizontal sway, both shaped by each point's noise phase */
-    SCROLL_FORCE_FACTOR: 0.0225,
-    SCROLL_SWAY_FACTOR: 0.6,
-    MAX_SCROLL_VELOCITY: 90,
-    SCROLL_SMOOTHING: 0.14
+    LINE_WIDTH: 0.8
   };
 
   /* Touch screens see slower, shorter pointer travel than a mouse, so the
@@ -105,7 +98,6 @@
     CFG.MOUSE_SMOOTHING_FACTOR = 0.13;
     CFG.MAX_MOUSE_VELOCITY = 120 / ZOOM;
     CFG.MAX_CURSOR_DISPLACEMENT = 100 / ZOOM;
-    CFG.SCROLL_FORCE_FACTOR = 0.01125 / ZOOM;
   }
 
   const canvas = document.querySelector('canvas.waves-bg');
@@ -120,14 +112,6 @@
   let visible = true;
   let staticDrawn = false;
   const mouse = { x: -10, y: 0, lx: 0, ly: 0, sx: 0, sy: 0, v: 0, vs: 0, a: 0, set: false };
-  let lastScrollY = 0, scrollV = 0, scrollF = 0;
-
-  /* Read the smoothed (visual) scroll position when ScrollSmoother is
-     running so the waves move with what the eye sees, not the raw scroll. */
-  function getScrollY() {
-    return window.__smoother ? window.__smoother.scrollTop() : (window.scrollY || 0);
-  }
-
   const isCalm = () => reducedMQ.matches || document.documentElement.dataset.motion === 'calm';
   const isHidden = () => canvas.clientWidth === 0 || canvas.clientHeight === 0;
 
@@ -171,13 +155,6 @@
         p.wave.y = Math.sin(move) * CFG.WAVE_AMPLITUDE_Y;
 
         if (withMouse) {
-          if (scrollF) {
-            /* wavy scroll push: upward lift weighted by the point's noise
-               phase, plus a horizontal sway that alternates direction across
-               the field — the lines snake upward instead of translating */
-            p.cursor.vy -= scrollF * (0.5 + 0.5 * Math.cos(move));
-            p.cursor.vx += scrollF * Math.sin(move) * CFG.SCROLL_SWAY_FACTOR;
-          }
           const dx = p.x - mouse.sx;
           const dy = p.y - mouse.sy;
           const d = Math.sqrt(dx * dx + dy * dy);
@@ -235,13 +212,6 @@
         }
       } else {
         staticDrawn = false;
-        if (TOUCH_ONLY) {
-          const sy = getScrollY();
-          scrollV += ((sy - lastScrollY) - scrollV) * CFG.SCROLL_SMOOTHING;
-          lastScrollY = sy;
-          const sv = Math.max(-CFG.MAX_SCROLL_VELOCITY, Math.min(CFG.MAX_SCROLL_VELOCITY, scrollV));
-          scrollF = sv * CFG.SCROLL_FORCE_FACTOR;
-        }
         mouse.sx += (mouse.x - mouse.sx) * CFG.MOUSE_SMOOTHING_FACTOR;
         mouse.sy += (mouse.y - mouse.sy) * CFG.MOUSE_SMOOTHING_FACTOR;
         const dx = mouse.sx - mouse.lx;
@@ -282,6 +252,5 @@
 
   setSize();
   setLines();
-  lastScrollY = getScrollY();   /* no first-frame velocity spike on restored scroll */
   requestAnimationFrame(tick);
 })();

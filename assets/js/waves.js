@@ -105,7 +105,7 @@
     CFG.MOUSE_SMOOTHING_FACTOR = 0.13;
     CFG.MAX_MOUSE_VELOCITY = 120 / ZOOM;
     CFG.MAX_CURSOR_DISPLACEMENT = 100 / ZOOM;
-    CFG.SCROLL_FORCE_FACTOR = 0.0225 / ZOOM;
+    CFG.SCROLL_FORCE_FACTOR = 0.01125 / ZOOM;
   }
 
   const canvas = document.querySelector('canvas.waves-bg');

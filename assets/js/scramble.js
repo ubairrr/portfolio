@@ -248,17 +248,23 @@
   }
 
   /* ─────────────────────────────────────────────
-     Mobile auto-play: on touch-only devices each scrambled text replays
-     once when its ScrollTrigger reveal fires, using the same start point
+     Mobile auto-play: on touch-only devices the SECTION HEADINGS replay
+     once when their ScrollTrigger reveal fires, using the same start point
      as the .reveal batch in smoother.js — so the scramble rides in with
-     the entrance animation instead of waiting for a (mouse) hover.
+     the entrance animation instead of waiting for a (touch) hover.
+
+     Everything else with a scramble (nav, badge, stack rows, project rows,
+     company names, footer, …) is left to touch-hover only on mobile.
   ───────────────────────────────────────────── */
+  const HEADING_SEL = ".sec-label, .sec-title";
+
   function bindAutoScramble() {
     if (!window.ScrollTrigger || !window.gsap) return;
     if (!window.matchMedia("(hover: none)").matches) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     REGISTERED.forEach(({ el, play }) => {
+      if (!el.matches(HEADING_SEL)) return;   /* section headings only */
       const reveal = el.closest(".reveal");
       if (!reveal) return;               /* only ScrollTrigger-revealed texts */
       ScrollTrigger.create({

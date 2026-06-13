@@ -79,26 +79,8 @@
     LINE_WIDTH: 0.8
   };
 
-  /* Touch screens see slower, shorter pointer travel than a mouse, so the
-     field reacts harder there: wider influence, stronger force, snappier
-     tracking of the finger. */
   const TOUCH_ONLY = window.matchMedia('(hover: none)').matches;
-
-  /* Mobile renders the field zoomed out to 50%: the grid is laid out in a
-     2× coordinate space and drawn at half scale, so the pattern is twice as
-     dense on screen. The interaction values below are expressed in that
-     field space (÷ZOOM for sizes/velocities, ×ZOOM for force) so the visual
-     feel of the touch and scroll reactions is unchanged by the zoom. */
   const ZOOM = TOUCH_ONLY ? 0.5 : 1;
-
-  if (TOUCH_ONLY) {
-    CFG.MOUSE_INFLUENCE_RADIUS = 130 / ZOOM;
-    CFG.MOUSE_FORCE_FACTOR = 0.001 * ZOOM;
-    CFG.CURSOR_DISPLACEMENT_STRENGTH = 2.3;
-    CFG.MOUSE_SMOOTHING_FACTOR = 0.13;
-    CFG.MAX_MOUSE_VELOCITY = 120 / ZOOM;
-    CFG.MAX_CURSOR_DISPLACEMENT = 100 / ZOOM;
-  }
 
   const canvas = document.querySelector('canvas.waves-bg');
   if (!canvas) return;

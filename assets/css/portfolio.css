@@ -1001,7 +1001,18 @@ html[data-direction="editorial"] .wordmark.t-hover { color: var(--ink); }
   .foot-cta h2 { font-size: calc(clamp(21px, 5.8vw, 50px) * var(--display-scale)); margin-bottom: 14px; }
   .foot-email { font-size: clamp(16px, 4.2vw, 22px); }
   .foot-divider { margin: 40px 0 0; }
-  .wordmark { font-size: calc(7.5vw * var(--display-scale)); padding: 28px 0 0; }
+  /* shrink-wrap to the text + clip to that box so the scramble animates in
+     place instead of its wider random glyphs spilling past the centred word
+     and getting cut by the footer's overflow:hidden */
+  .wordmark {
+    font-size: calc(7.5vw * var(--display-scale));
+    padding: 30px 8px 6px;
+    width: fit-content;
+    max-width: calc(100vw - 20px);
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+  }
   .foot-bar { flex-wrap: wrap; gap: 8px 20px; padding: 18px 0 16px; margin-top: 26px; font-size: 11px; }
 }
 

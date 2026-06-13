@@ -35,7 +35,7 @@
   const isOff = () => document.documentElement.dataset.intro === 'off';
 
   /* ---------- virtual scroll state ---------- */
-  const RANGE = () => window.innerHeight * 0.8;  /* half the old travel — finishes in ~130vh */
+  const RANGE = () => window.innerHeight * 0.6;  /* finishes in ~60vh of travel */
   let target = 0;       /* where input wants to be   */
   let current = 0;      /* smoothed position          */
   let done = false;

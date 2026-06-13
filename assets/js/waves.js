@@ -82,6 +82,19 @@
   const TOUCH_ONLY = window.matchMedia('(hover: none)').matches;
   const ZOOM = TOUCH_ONLY ? 0.5 : 1;
 
+  /* A scroll-swipe whips the finger across the screen far faster than a mouse
+     ever moves, and the cursor force scales with pointer velocity. Left at the
+     desktop values that produces a violent swirl, and the large displacement
+     lingers as a decaying blob when the finger lifts and re-plants for the next
+     swipe (reads as a teleport). Cap velocity and soften the force so the touch
+     point behaves like a calm cursor that settles instantly on release. */
+  if (TOUCH_ONLY) {
+    CFG.MAX_MOUSE_VELOCITY = 28;
+    CFG.MOUSE_FORCE_FACTOR = 0.00045;
+    CFG.MAX_CURSOR_DISPLACEMENT = 42;
+    CFG.FRICTION = 0.86;
+  }
+
   const canvas = document.querySelector('canvas.waves-bg');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');

@@ -93,6 +93,10 @@
     CFG.MOUSE_FORCE_FACTOR = 0.00045;
     CFG.MAX_CURSOR_DISPLACEMENT = 42;
     CFG.FRICTION = 0.86;
+    /* speed up the waves' autonomous drift on mobile (these factors scale the
+       time term fed to the noise field — higher = faster self-motion) */
+    CFG.WAVE_TIME_X_FACTOR *= 1.8;
+    CFG.WAVE_TIME_Y_FACTOR *= 1.8;
   }
 
   const canvas = document.querySelector('canvas.waves-bg');

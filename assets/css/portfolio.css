@@ -787,10 +787,10 @@ html[data-direction="editorial"] .about-quote .q-accent { font-style: italic; }
 /* On small / touch screens the preview stays on (touch-hover.js drives it):
    it shrinks and is placed above the finger by interactions.js. */
 @media (max-width: 760px) {
-  .cursor-prev { width: min(280px, 74vw); height: auto; aspect-ratio: 34 / 23; }
-  .cursor-prev .prev-art { padding: 14px; }
-  .cursor-prev .prev-num { font-size: 11px; }
-  .cursor-prev .prev-name { font-size: calc(19px * var(--display-scale)); }
+  .cursor-prev { width: min(200px, 56vw); height: auto; aspect-ratio: 34 / 23; }
+  .cursor-prev .prev-art { padding: 10px; }
+  .cursor-prev .prev-num { font-size: 9.5px; }
+  .cursor-prev .prev-name { font-size: calc(14px * var(--display-scale)); }
 }
 
 /* ============================================================
@@ -949,56 +949,61 @@ html[data-direction="editorial"] .wordmark.t-hover { color: var(--ink); }
    and gaps so small screens don't feel congested.
    ============================================================ */
 @media (max-width: 760px) {
-  body { font-size: 15px; }
-  .wrap { width: calc(100vw - 44px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)); }
-  section { padding: 80px 0; }
+  body { font-size: 13.5px; }
+  .wrap { width: calc(100vw - 40px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)); }
+  section { padding: 56px 0; }
 
-  .sec-label { font-size: 12px; letter-spacing: 0.24em; gap: 11px; margin-bottom: 34px; }
-  .sec-label::before { width: 32px; }
-  .sec-title { font-size: calc(clamp(28px, 8.4vw, 72px) * var(--display-scale)); margin-bottom: 36px; }
+  .sec-label { font-size: 11px; letter-spacing: 0.22em; gap: 9px; margin-bottom: 24px; }
+  .sec-label::before { width: 26px; }
+  .sec-title { font-size: calc(clamp(22px, 6.6vw, 56px) * var(--display-scale)); margin-bottom: 26px; }
 
-  .hero { padding: 84px 0 0; }
-  .hero h1 { font-size: calc(clamp(34px, 11vw, 110px) * var(--display-scale)); }
-  .badge { padding: 7px 14px; font-size: 11.5px; margin-bottom: 30px; }
-  .hero-sub { margin-top: 32px; gap: 26px; }
-  .tagline { font-size: 15px; }
-  .cta { padding: 15px 28px; font-size: 13px; }
-  .stats { margin-top: 48px; }
-  .stat .num { font-size: calc(clamp(28px, 7.4vw, 56px) * var(--display-scale)); }
-  .stat .lbl { margin-top: 7px; font-size: 12px; }
+  .hero { padding: 60px 0 0; }
+  .hero h1 { font-size: calc(clamp(30px, 9vw, 92px) * var(--display-scale)); }
+  .badge { padding: 6px 12px; font-size: 10.5px; margin-bottom: 22px; }
+  .hero-sub { margin-top: 22px; gap: 18px; }
+  .tagline { font-size: 13.5px; max-width: 100%; }
+  .cta { padding: 12px 22px; font-size: 12px; }
+  .stats { margin-top: 32px; }
+  .stat { padding: 16px 0; }
+  .stat .num { font-size: calc(clamp(24px, 6vw, 46px) * var(--display-scale)); }
+  .stat .lbl { margin-top: 6px; font-size: 11px; }
 
-  .about-grid { gap: 44px; }
-  .about-quote blockquote { font-size: calc(clamp(23px, 6.2vw, 50px) * var(--display-scale)); }
-  .about-bio .profile-photo { height: 340px; }
-  .about-name { margin: 26px 0 6px; }
-  .about-role { margin-bottom: 20px; }
+  .about-grid { gap: 30px; }
+  .about-quote blockquote { font-size: calc(clamp(20px, 5.2vw, 42px) * var(--display-scale)); }
+  .about-bio .profile-photo { height: 250px; }
+  .about-name { font-size: calc(22px * var(--display-scale)); margin: 20px 0 5px; }
+  .about-role { font-size: 12px; margin-bottom: 15px; }
+  .about-bio p { margin-bottom: 14px; }
 
-  .stack-row { padding: 28px 0; gap: 14px; }
-  .stack-tiles { gap: 10px; }
-  .tile { gap: 9px; padding: 10px 14px 10px 11px; }
-  .tile img, .tile .fallback { width: 19px; height: 19px; }
-  .tile .t-name { font-size: 13px; }
+  .stack-row { padding: 20px 0; gap: 12px; }
+  .stack-cat { font-size: 12px; }
+  .stack-tiles { gap: 8px; }
+  .tile { gap: 7px; padding: 8px 12px 8px 9px; }
+  .tile img, .tile .fallback { width: 16px; height: 16px; }
+  .tile .t-name { font-size: 12px; }
 
-  .xp-entry { grid-template-columns: 1fr; gap: 6px; padding: 30px 0; }
-  .xp-company { font-size: calc(clamp(22px, 6vw, 44px) * var(--display-scale)); }
-  .xp-dates { font-size: 12px; }
-  .xp-role { font-size: 14px; }
+  .xp-entry { grid-template-columns: 1fr; gap: 5px; padding: 20px 0; }
+  .xp-company { font-size: calc(clamp(19px, 5vw, 38px) * var(--display-scale)); }
+  .xp-dates { font-size: 11px; }
+  .xp-role { font-size: 13px; }
 
-  .proj-row { gap: 10px 14px; padding: 26px 4px; }
-  .proj-name { font-size: calc(clamp(20px, 5.4vw, 40px) * var(--display-scale)); }
-  .proj-tags { gap: 6px; }
-  .proj-tags span { font-size: 10.5px; padding: 4px 10px; }
+  .proj-row { gap: 8px 12px; padding: 18px 4px; }
+  .proj-num { font-size: 12px; }
+  .proj-name { font-size: calc(clamp(17px, 4.6vw, 34px) * var(--display-scale)); }
+  .proj-tags { gap: 5px; }
+  .proj-tags span { font-size: 9.5px; padding: 3px 9px; }
 
-  footer { padding: 90px 0 0; }
-  .foot-cta h2 { font-size: calc(clamp(25px, 7vw, 60px) * var(--display-scale)); margin-bottom: 18px; }
-  .foot-divider { margin: 56px 0 0; }
-  .wordmark { font-size: calc(11vw * var(--display-scale)); padding: 40px 0 0; }
-  .foot-bar { flex-wrap: wrap; gap: 10px 24px; padding: 26px 0 24px; margin-top: 36px; font-size: 12px; }
+  footer { padding: 62px 0 0; }
+  .foot-cta h2 { font-size: calc(clamp(21px, 5.8vw, 50px) * var(--display-scale)); margin-bottom: 14px; }
+  .foot-email { font-size: clamp(16px, 4.2vw, 22px); }
+  .foot-divider { margin: 40px 0 0; }
+  .wordmark { font-size: calc(9vw * var(--display-scale)); padding: 28px 0 0; }
+  .foot-bar { flex-wrap: wrap; gap: 8px 20px; padding: 18px 0 16px; margin-top: 26px; font-size: 11px; }
 }
 
 @media (max-width: 420px) {
-  .wrap { width: calc(100vw - 36px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)); }
-  section { padding: 68px 0; }
+  .wrap { width: calc(100vw - 32px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)); }
+  section { padding: 46px 0; }
 }
 
 /* Honour reduced-motion globally as a final safety net: neutralise any

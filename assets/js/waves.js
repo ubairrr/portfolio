@@ -225,8 +225,27 @@
 
   window.addEventListener('resize', () => { setSize(); setLines(); staticDrawn = false; }, { passive: true });
   window.addEventListener('mousemove', (e) => updateMousePosition(e.clientX, e.clientY), { passive: true });
+
+  let touchStartX = 0, touchStartY = 0, touchScrolling = false;
+  window.addEventListener('touchstart', (e) => {
+    if (!e.touches.length) return;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    touchScrolling = false;
+  }, { passive: true });
   window.addEventListener('touchmove', (e) => {
-    if (e.touches.length) updateMousePosition(e.touches[0].clientX, e.touches[0].clientY);
+    if (!e.touches.length) return;
+    const t = e.touches[0];
+    if (!touchScrolling) {
+      const dx = Math.abs(t.clientX - touchStartX);
+      const dy = Math.abs(t.clientY - touchStartY);
+      if (dy > dx * 1.5) touchScrolling = true;
+    }
+    if (!touchScrolling) updateMousePosition(t.clientX, t.clientY);
+  }, { passive: true });
+  window.addEventListener('touchend', () => {
+    touchScrolling = false;
+    mouse.set = false;
   }, { passive: true });
 
   /* Redraw the static frame if the OS reduced-motion preference flips. */

@@ -593,15 +593,37 @@ html[data-direction="editorial"] .about-quote .q-accent { font-style: italic; }
 /* ============================================================
    SECTION 3 — STACK
    ============================================================ */
+.stack-group {
+  border-top: 1px solid var(--line);
+  padding: 38px 0 30px;
+}
+.stack-group:last-child { border-bottom: 1px solid var(--line); }
+.stack-group-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.stack-group-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+}
+.stack-group-title {
+  font-family: var(--display-font);
+  font-size: clamp(20px, 3.2vw, 28px);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
 .stack-row {
   display: grid;
   grid-template-columns: 200px 1fr;
   gap: 36px;
-  padding: 42px 0;
-  border-top: 1px solid var(--line);
+  padding: 18px 0;
   align-items: start;
 }
-.stack-row:last-child { border-bottom: 1px solid var(--line); }
 .stack-cat {
   font-family: var(--label-font);
   font-size: 14px;
@@ -646,8 +668,9 @@ html[data-direction="editorial"] .about-quote .q-accent { font-style: italic; }
 .tile.no-icon .fallback { display: grid; }
 .tile .t-name { font-size: 14.5px; white-space: nowrap; }
 @media (max-width: 760px) {
-  .stack-row { grid-template-columns: 1fr; gap: 18px; }
+  .stack-row { grid-template-columns: 1fr; gap: 10px; padding: 14px 0; }
   .stack-cat { padding-top: 0; }
+  .stack-group-head { gap: 10px; margin-bottom: 8px; }
 }
 
 /* ============================================================
@@ -982,8 +1005,10 @@ html[data-direction="editorial"] .wordmark.t-hover { color: var(--ink); }
   .about-role { font-size: 12px; margin-bottom: 15px; }
   .about-bio p { margin-bottom: 14px; }
 
-  .stack-row { padding: 20px 0; gap: 12px; }
+  .stack-row { padding: 12px 0; gap: 8px; }
   .stack-cat { font-size: 12px; }
+  .stack-group { padding: 28px 0 22px; }
+  .stack-group-title { font-size: 21px; }
   .stack-tiles { gap: 8px; }
   .tile { gap: 7px; padding: 8px 12px 8px 9px; }
   .tile img { width: 16px; height: 16px; }

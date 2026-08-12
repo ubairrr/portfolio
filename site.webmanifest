@@ -1,7 +1,7 @@
 {
   "name": "Ubair Mustafa — AI & Software Engineer",
   "short_name": "Ubair Mustafa",
-  "description": "AI & software engineer shipping LLM-powered systems end to end — real-time voice agents, local-first desktop apps, and bare-metal firmware.",
+  "description": "AI & software engineer building production AI systems end to end — from the models and guardrails down to the firmware.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#390000",
